@@ -1,0 +1,312 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Pragati+Narrow:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --orange: #f47a20;
+  --orange-hover: #e06a10;
+  --dark: #1a1a1a;
+  --text: #222222;
+  --muted: #888;
+  --border: #ddd;
+  --input-bg: #fff;
+  --bg-right: #f4f4f4;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-right);
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  position: relative;
+  width: 42%;
+  min-height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.left-panel .bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Orange overlay */
+.left-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(207, 110, 20, 0.72);
+  mix-blend-mode: multiply;
+}
+
+.left-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px 44px;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--orange);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.headline {
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(42px, 5vw, 64px);
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.subtext {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+  max-width: 300px;
+  margin-bottom: 36px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 36px;
+}
+
+.stat-item .value {
+  font-family: "Outfit", sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.stat-item .label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 3px;
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  background: var(--bg-right);
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+/* SVG Basketball icon fallback */
+.logo-icon {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: "Outfit", sans-serif;
+  font-size: 38px;
+  font-weight: bold;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+}
+
+/* Heading */
+.form-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+
+/* Fields */
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-wrap input::placeholder {
+  color: #bbb;
+}
+
+.input-wrap input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(244, 122, 32, 0.12);
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.toggle-pw:hover {
+  color: #888;
+}
+
+/* Submit */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--orange);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  letter-spacing: 0.2px;
+}
+
+.btn-submit:hover {
+  background: var(--orange-hover);
+}
+.btn-submit:active {
+  transform: scale(0.99);
+}
+
+.arrow-icon {
+  font-size: 18px;
+}
+
+/* Sign up link */
+.signup-row {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.signup-row a {
+  color: var(--orange);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.signup-row a:hover {
+  text-decoration: underline;
+}
+
+/* Legal */
+.legal {
+  margin-top: 44px;
+  text-align: center;
+  font-size: 11.5px;
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.legal a {
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.legal a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .left-panel {
+    display: none;
+  }
+  .right-panel {
+    padding: 32px 24px;
+  }
+}

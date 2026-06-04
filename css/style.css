@@ -1,0 +1,531 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Pragati+Narrow:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    "Poppins",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #f0f0f0;
+  min-height: 100vh;
+}
+
+/* ── Top bar ──────────────────────────────────────────────── */
+.topbar {
+  padding: 16px 32px 0;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 100px;
+  width: auto;
+}
+
+.logo-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+.tagline {
+  font-size: 14px;
+  color: #666;
+  margin: 14px 0px 32px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #777;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-logout:hover {
+  background: #f5f5f5;
+}
+
+/* ── Nav bar ──────────────────────────────────────────────── */
+.nav-wrapper {
+  padding: 0 32px 16px;
+}
+
+#statjam-nav {
+  background: #f47a20;
+  border-radius: 999px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+#nav-pill {
+  position: absolute;
+  background: #fff;
+  border-radius: 999px;
+  top: 5px;
+  bottom: 5px;
+  pointer-events: none;
+  transition:
+    left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-tab {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 22px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+}
+.nav-tab.active {
+  color: #212121;
+}
+
+/* ── Main content area ────────────────────────────────────── */
+.content {
+  padding: 24px 32px;
+}
+
+.page {
+  display: none;
+}
+.page.active {
+  display: block;
+}
+
+/* ── Stat cards row ───────────────────────────────────────── */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card-label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 400;
+}
+
+.stat-card-icon {
+  color: #bbb;
+  font-size: 18px;
+}
+
+.stat-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.1;
+}
+
+.stat-card-value.large {
+  font-size: 36px;
+}
+
+.stat-card-sub {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ── Bottom two panels ────────────────────────────────────── */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 22px;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 3px;
+}
+
+.panel-subtitle {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 18px;
+}
+
+/* Top Performers */
+.performer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.performer-row:last-child {
+  border-bottom: none;
+}
+
+.performer-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.performer-num {
+  font-size: 12px;
+  color: #aaa;
+  min-width: 22px;
+  padding-top: 2px;
+}
+
+.performer-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.performer-pos {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.performer-right {
+  text-align: right;
+}
+
+.performer-ppg {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.performer-extras {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Recent Games */
+.game-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.game-row:last-child {
+  border-bottom: none;
+}
+
+.game-opponent {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+.game-date {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.game-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.badge-final {
+  background: #f47a20;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.badge-upcoming {
+  background: #e8f4fd;
+  color: #3a8fd4;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.game-score {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* ── Placeholder for empty tabs ───────────────────────────── */
+.placeholder {
+  background: #fff;
+  border: 2px dashed #e0e0e0;
+  border-radius: 14px;
+  padding: 60px 32px;
+  text-align: center;
+  color: #ccc;
+}
+.placeholder h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.placeholder p {
+  font-size: 13px;
+}
+
+.tab-tagline {
+  background: #fff;
+  border-radius: 999px;
+  padding: 14px 22px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab-tagline .tagline-txt {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.add-btn {
+  background: none;
+  color: #f47a20;
+  font-size: 14px;
+  border: unset;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  text-decoration: underline;
+}
+
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.backdrop.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* OVERLAY */
+
+.overlay {
+    position: fixed;
+    left: 0;
+    bottom: -100%;
+    width: 100%;
+    height: 72%;
+    background: #f58200;
+    border-radius: 30px 30px 0 0;
+    padding: 30px;
+    box-sizing: border-box;
+    transition: 0.4s ease;
+}
+
+.overlay.active {
+    bottom: 0;
+}
+
+/* CLOSE BUTTON */
+
+.close-btn {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+
+    font-size: 40px;
+
+    background: none;
+    border: none;
+
+    color: white;
+    cursor: pointer;
+}
+
+/* LOGO UPLOAD */
+
+.logo-upload {
+    width: 50%;
+    height: 300px;
+
+    background: #fff;
+
+    margin: 0 auto 25px auto;
+
+    border-radius: 22px;
+
+    border: 2px dashed #f58200;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: #f58200;
+}
+
+.logo-upload input {
+    margin-top: 10px;
+}
+
+/* FORM ROW */
+
+.form-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.form-row input,
+.form-row select {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background-color: #fff;
+}
+
+/* TEAM NAME BIGGER */
+
+.team-name {
+    width: 220px;
+}
+
+/* BUTTON */
+
+.save-btn {
+    display: block;
+
+    margin: 25px auto 0 auto;
+
+    background: #fff;
+    color: #f58200;
+
+    border: none;
+
+    padding: 14px 40px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.save-btn:hover {
+    background: #f5f5f5;
+}
+
+.teams-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    gap: 20px;
+
+}
+
+.team-card {
+    background: #fff;
+    border-radius: 25px;
+    padding: 25px 20px;
+    text-decoration: none;
+    color: #212121;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-logo {
+    width: 90px;
+    height: 90px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    background: white;
+
+    margin-bottom: 20px;
+}
+
+.team-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.empty-state {
+    margin-top: 50px;
+    width: 100%;
+    text-align: center;
+    opacity: 0.6;
+}
