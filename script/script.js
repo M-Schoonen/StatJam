@@ -32,36 +32,29 @@ window.addEventListener("load", () => {
 });
 
 function openOverlay() {
-  document.getElementById('backdrop').classList.add('visible');
-  document.getElementById('overlay').classList.add('open');
+  document.getElementById("backdrop").classList.add("visible");
+  document.getElementById("overlay").classList.add("open");
 }
 function closeOverlay() {
-  document.getElementById('backdrop').classList.remove('visible');
-  document.getElementById('overlay').classList.remove('open');
+  document.getElementById("backdrop").classList.remove("visible");
+  document.getElementById("overlay").classList.remove("open");
 }
 
+function loadPlayers(teamId, teamName, gender, ageCategory) {
+  const teamsView = document.getElementById("teams-view");
+  const playersView = document.getElementById("players-view");
 
+  setPlayersHeader(teamId, teamName, gender, ageCategory);
 
-
-function loadPlayers(teamId, teamName, teamGender, teamAgeCategory) {
-  const teamsView = document.getElementById('teams-view');
-  const playersView = document.getElementById('players-view');
-
-  // fade out teams
   teamsView.style.opacity = 0;
 
   setTimeout(() => {
-    teamsView.style.display = 'none';
+    teamsView.style.display = "none";
 
     fetch(`?ajax=players&team_id=${teamId}`)
-      .then(res => res.json())
-      .then(players => {
-
+      .then((res) => res.json())
+      .then((players) => {
         let html = `
-          <div class="players-header">
-            <button onclick="backToTeams()">← Back</button>
-            <h2>${teamName} ${teamGender}${teamAgeCategory} Players</h2>
-          </div>
           <div class="players-container">
         `;
 
@@ -69,7 +62,7 @@ function loadPlayers(teamId, teamName, teamGender, teamAgeCategory) {
           html += `<div class="empty-state">No players found</div>`;
         }
 
-        players.forEach(p => {
+        players.forEach((p) => {
           html += `
             <div class="player-card">
               <div class="player-number">#${p.number}</div>
@@ -82,30 +75,59 @@ function loadPlayers(teamId, teamName, teamGender, teamAgeCategory) {
         html += `</div>`;
 
         playersView.innerHTML = html;
-        playersView.style.display = 'block';
+        playersView.style.display = "block";
 
         setTimeout(() => {
           playersView.style.opacity = 1;
         }, 50);
-
       });
-
   }, 200);
 }
 
 function backToTeams() {
-  const teamsView = document.getElementById('teams-view');
-  const playersView = document.getElementById('players-view');
+  const teamsView = document.getElementById("teams-view");
+  const playersView = document.getElementById("players-view");
+
+  resetTeamsHeader();
 
   playersView.style.opacity = 0;
 
   setTimeout(() => {
-    playersView.style.display = 'none';
-    teamsView.style.display = 'block';
+    playersView.style.display = "none";
+    teamsView.style.display = "block";
 
     setTimeout(() => {
       teamsView.style.opacity = 1;
     }, 50);
-
   }, 200);
+}
+
+function setPlayersHeader(teamId, teamName, gender, ageCategory) {
+  document.getElementById("page-title").innerHTML = `
+    <span class="back-title" onclick="backToTeams()">
+      <svg class="back-icon" width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 8L8.10811 0L10 1.86667L3.78378 8L10 14.1333L8.10811 16L0 8Z" fill="#F57C00"/>
+      </svg>
+
+      <span class="back-text">
+        ${teamName} ${gender}${ageCategory}
+      </span>
+    </span>
+  `;
+
+  const btn = document.getElementById("action-btn");
+  btn.innerHTML = "+ Add Player";
+  btn.onclick = () => openAddPlayer(teamId);
+}
+
+function resetTeamsHeader() {
+  document.getElementById("page-title").innerText = "Your teams & players";
+
+  const btn = document.getElementById("action-btn");
+  btn.innerHTML = "+ Add Team";
+  btn.onclick = openOverlay;
+}
+
+function openAddPlayer(teamId) {
+  console.log("Add player for team:", teamId);
 }

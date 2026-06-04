@@ -548,3 +548,15 @@ body {
   border-radius: 10px;
   background: white;
 }
+
+.back-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.back-icon {
+  display: block;
+  flex-shrink: 0;
+}

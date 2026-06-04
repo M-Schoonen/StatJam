@@ -186,8 +186,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
     ════════════════════════════════════════════════════════ -->
     <div class="page" id="page-teams">
       <div class="tab-tagline">
-        <p class="tagline-txt">Your teams &amp; players</p>
-        <button class="add-btn" onclick="openOverlay()">
+        <p class="tagline-txt" id="page-title">Your teams &amp; players</p>
+
+        <button class="add-btn" id="action-btn" onclick="openOverlay()">
           + Add Team
         </button>
       </div>
