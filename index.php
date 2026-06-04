@@ -7,7 +7,9 @@ if (!isset($_SESSION['user_id'])) {
 
 include 'db.php';
 
-$sql = "SELECT * FROM teams ORDER BY age_category";
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT * FROM teams WHERE user_id = '$user_id' ORDER BY age_category";
 $result = $conn->query($sql);
 
 ?>
