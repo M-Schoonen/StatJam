@@ -18,7 +18,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
 
   $team_id = $_GET['team_id'];
 
-  $sql = "SELECT * FROM players WHERE team_id = '$team_id'";
+  $sql = "SELECT * FROM players WHERE team_id = '$team_id' ORDER BY jersey_number";
   $result = $conn->query($sql);
 
   $players = [];
@@ -201,7 +201,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
           ?>
 
               <div class="team-card"
-                onclick="loadPlayers(<?= $team['id'] ?>, '<?= htmlspecialchars($team['team_name']) ?>')">
+                onclick="loadPlayers(<?= $team['id'] ?>, '<?= htmlspecialchars($team['team_name']) ?>', '<?= $team['gender'] ?>', '<?= $team['age_category'] ?>')">
 
                 <img class="team-logo" src="<?= $team['logo'] ?>" alt="logo">
 

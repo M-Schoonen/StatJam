@@ -43,7 +43,7 @@ function closeOverlay() {
 
 
 
-function loadPlayers(teamId, teamName) {
+function loadPlayers(teamId, teamName, teamGender, teamAgeCategory) {
   const teamsView = document.getElementById('teams-view');
   const playersView = document.getElementById('players-view');
 
@@ -60,7 +60,7 @@ function loadPlayers(teamId, teamName) {
         let html = `
           <div class="players-header">
             <button onclick="backToTeams()">← Back</button>
-            <h2>${teamName} Players</h2>
+            <h2>${teamName} ${teamGender}${teamAgeCategory} Players</h2>
           </div>
           <div class="players-container">
         `;
