@@ -215,7 +215,7 @@ $result = $conn->query($sql);
       <div class="backdrop" id="backdrop" onclick="closeOverlay()"></div>
 
       <div class="overlay" id="overlay">
-
+        <div id="overlay-container">
         <button class="close-btn" onclick="closeOverlay()">
           <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M42.8872 1.22016C44.5143 -0.406816 47.1526 -0.406627 48.7798 1.22016C50.407 2.84734 50.4069 5.48552 48.7798 7.11274L30.8921 24.9995L48.7798 42.8872C50.4069 44.5143 50.4068 47.1525 48.7798 48.7797C47.1526 50.4069 44.5144 50.4069 42.8872 48.7797L24.9995 30.892L7.11279 48.7797C5.48558 50.4069 2.84743 50.4069 1.22022 48.7797C-0.40661 47.1525 -0.406867 44.5142 1.22022 42.8872L19.1069 24.9995L1.22022 7.11274C-0.406582 5.48553 -0.40679 2.84725 1.22022 1.22016C2.84731 -0.406742 5.48561 -0.406601 7.11279 1.22016L24.9995 19.1069L42.8872 1.22016Z" fill="white" />
@@ -223,7 +223,6 @@ $result = $conn->query($sql);
         </button>
 
         <form action="save_team.php" method="POST" enctype="multipart/form-data">
-
           <div class="logo-upload">
             <strong>Add your logo here</strong>
 
@@ -265,7 +264,7 @@ $result = $conn->query($sql);
           </button>
 
         </form>
-
+        </div>
       </div>
     </div>
 

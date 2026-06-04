@@ -32,11 +32,10 @@ window.addEventListener("load", () => {
 });
 
 function openOverlay() {
-  document.getElementById("overlay").classList.add("active");
-  document.getElementById("backdrop").classList.add("active");
+  document.getElementById('backdrop').classList.add('visible');
+  document.getElementById('overlay').classList.add('open');
 }
-
 function closeOverlay() {
-  document.getElementById("overlay").classList.remove("active");
-  document.getElementById("backdrop").classList.remove("active");
+  document.getElementById('backdrop').classList.remove('visible');
+  document.getElementById('overlay').classList.remove('open');
 }
