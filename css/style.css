@@ -499,6 +499,7 @@ body {
     color: #212121;
     transition: 0.2s;
     text-align: center;
+    cursor: pointer;
 }
 
 .team-card:hover {
@@ -528,4 +529,22 @@ body {
     width: 100%;
     text-align: center;
     opacity: 0.6;
+}
+
+
+
+#teams-view,
+#players-view {
+  transition: opacity 0.2s ease;
+}
+
+.players-container {
+  display: grid;
+  gap: 12px;
+}
+
+.player-card {
+  padding: 12px;
+  border-radius: 10px;
+  background: white;
 }
