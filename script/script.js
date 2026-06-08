@@ -35,10 +35,6 @@ function openOverlay() {
   document.getElementById("backdrop").classList.add("visible");
   document.getElementById("overlay").classList.add("open");
 }
-function closeOverlay() {
-  document.getElementById("backdrop").classList.remove("visible");
-  document.getElementById("overlay").classList.remove("open");
-}
 
 function loadPlayers(teamId, teamName, gender, ageCategory) {
   const teamsView = document.getElementById("teams-view");
@@ -130,4 +126,20 @@ function resetTeamsHeader() {
 
 function openAddPlayer(teamId) {
   console.log("Add player for team:", teamId);
+}
+
+
+function openAddPlayer(teamId) {
+  document.getElementById("player-team-id").value = teamId;
+
+  document.getElementById("backdrop").classList.add("visible");
+  document.getElementById("player-overlay").classList.add("open");
+}
+
+function closeAllOverlays() {
+  document.querySelectorAll(".overlay").forEach(el => {
+    el.classList.remove("open");
+  });
+
+  document.getElementById("backdrop").classList.remove("visible");
 }
