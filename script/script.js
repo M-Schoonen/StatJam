@@ -11,6 +11,8 @@ function setTab(el) {
   document.getElementById(pageId).classList.add("active");
 }
 
+let currentTeam = null;
+
 function movePill(el) {
   const pill = document.getElementById("nav-pill");
   const nav = el.closest("nav");
@@ -37,6 +39,13 @@ function openOverlay() {
 }
 
 function loadPlayers(teamId, teamName, gender, ageCategory) {
+  currentTeam = {
+    teamId,
+    teamName,
+    gender,
+    ageCategory,
+  };
+
   const teamsView = document.getElementById("teams-view");
   const playersView = document.getElementById("players-view");
 
@@ -128,7 +137,6 @@ function openAddPlayer(teamId) {
   console.log("Add player for team:", teamId);
 }
 
-
 function openAddPlayer(teamId) {
   document.getElementById("player-team-id").value = teamId;
 
@@ -137,9 +145,39 @@ function openAddPlayer(teamId) {
 }
 
 function closeAllOverlays() {
-  document.querySelectorAll(".overlay").forEach(el => {
+  document.querySelectorAll(".overlay").forEach((el) => {
     el.classList.remove("open");
   });
 
   document.getElementById("backdrop").classList.remove("visible");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("player-form");
+
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    fetch("save_player.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then(() => {
+        closeAllOverlays();
+
+        loadPlayers(
+          currentTeam.teamId,
+          currentTeam.teamName,
+          currentTeam.gender,
+          currentTeam.ageCategory,
+        );
+
+        form.reset();
+      });
+  });
+});

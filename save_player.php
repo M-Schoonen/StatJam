@@ -12,5 +12,5 @@ $sql = "INSERT INTO players (team_id, first_name, last_name, jersey_number, posi
 
 $conn->query($sql);
 
-header("Location: index.php");
+echo "success";
 exit;

@@ -293,8 +293,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
             </svg>
           </button>
 
-          <form action="save_player.php" method="POST">
-
+          <form id="player-form">
             <!-- hidden team id -->
             <input type="hidden" name="team_id" id="player-team-id">
 
