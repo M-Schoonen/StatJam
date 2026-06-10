@@ -181,3 +181,35 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 });
+
+window.addEventListener("load", () => {
+  const teamForm = document.getElementById("team-form");
+
+  if (!teamForm) return;
+
+  teamForm.onsubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    console.log("TEAM SUBMIT HARD BLOCKED");
+
+    const formData = new FormData(teamForm);
+
+    try {
+      await fetch("save_team.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      closeAllOverlays();
+
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    } catch (err) {
+      console.error(err);
+    }
+
+    return false;
+  };
+});

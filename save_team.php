@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ('$user_id', '$team_name', '$gender', '$age_category', '$upload_path')";
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: index.php");
+        echo "success";
         exit();
     } else {
         echo "Error: " . $conn->error;

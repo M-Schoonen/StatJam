@@ -235,7 +235,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
             </svg>
           </button>
 
-          <form action="save_team.php" method="POST" enctype="multipart/form-data">
+          <form id="team-form" enctype="multipart/form-data">
             <div class="logo-upload">
               <strong>Add your logo here</strong>
 
