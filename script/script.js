@@ -177,10 +177,21 @@ document.addEventListener("DOMContentLoaded", () => {
           currentTeam.ageCategory,
         );
 
+        refreshStats();
+
         form.reset();
       });
   });
 });
+
+function refreshStats() {
+  fetch("get_stats.php")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("total-players").textContent =
+        data.total_players;
+    });
+}
 
 window.addEventListener("load", () => {
   const teamForm = document.getElementById("team-form");

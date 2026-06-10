@@ -31,6 +31,20 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
   exit;
 }
 
+$user_id = $_SESSION['user_id'];
+
+$sqlPlayers = "
+SELECT COUNT(p.id) AS total_players
+FROM players p
+JOIN teams t ON p.team_id = t.id
+WHERE t.user_id = '$user_id'
+";
+
+$resultPlayers = $conn->query($sqlPlayers);
+$rowPlayers = $resultPlayers->fetch_assoc();
+
+$totalPlayers = $rowPlayers['total_players'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +107,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
               <path d="M21 21v-2a4 4 0 0 0-3-3.85" />
             </svg>
           </div>
-          <div class="stat-card-value">42</div>
+          <div class="stat-card-value" id="total-players">
+            <?= $totalPlayers ?>
+          </div>
         </div>
 
         <div class="stat-card">
