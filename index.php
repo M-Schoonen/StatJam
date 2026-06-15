@@ -33,6 +33,15 @@ $result = $conn->query($sql);
 $sqlTeams = "SELECT * FROM teams WHERE user_id = '$user_id' ORDER BY age_category";
 $teamsResult = $conn->query($sqlTeams);
 
+$upcomingGamesResult = $conn->query("
+    SELECT COUNT(*) AS total
+    FROM games
+    WHERE user_id = '$user_id'
+    AND game_date >= CURDATE()
+");
+
+$upcomingGames = $upcomingGamesResult->fetch_assoc()['total'];
+
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'games') {
   header('Content-Type: application/json');
 
@@ -166,7 +175,9 @@ $totalPlayers = $rowPlayers['total_players'];
               <polyline points="16 7 22 7 22 13" />
             </svg>
           </div>
-          <div class="stat-card-value">2</div>
+          <div class="stat-card-value" id="upcoming-games-count">
+            <?= $upcomingGames ?>
+          </div>
         </div>
       </div>
 

@@ -299,6 +299,8 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           renderGames();
+          updateUpcomingGamesCount();
+
           gameForm.reset();
         })
         .catch((err) => console.error(err));
@@ -320,4 +322,12 @@ function appendTeamCard(team) {
   card.onclick = () =>
     loadPlayers(team.id, team.name, team.gender, team.age_category);
   container.appendChild(card);
+}
+
+function updateUpcomingGamesCount() {
+  const counter = document.getElementById("upcoming-games-count");
+
+  if (counter) {
+    counter.innerText = games.length;
+  }
 }
