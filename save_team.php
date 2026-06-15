@@ -11,20 +11,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gender = $_POST['gender'];
     $age_category = $_POST['age_category'];
 
-    // LOGO UPLOAD
+    // Logo upload
     $logo_name = $_FILES['logo']['name'];
     $tmp_name = $_FILES['logo']['tmp_name'];
 
-    // unieke bestandsnaam maken
     $new_logo_name = time() . "_" . $logo_name;
-
-    // map waar logo opgeslagen wordt
     $upload_path = "uploads/" . $new_logo_name;
 
-    // upload verplaatsen
     move_uploaded_file($tmp_name, $upload_path);
 
-    // OPSLAAN IN DATABASE
     $sql = "INSERT INTO teams 
     (user_id, team_name, gender, age_category, logo)
     VALUES 
@@ -35,5 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         echo "Error: " . $conn->error;
+        exit();
     }
 }
