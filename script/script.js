@@ -214,6 +214,15 @@ function renderGames() {
           <div class="game-date">${formatGameDate(g.game_date)}</div>
         </div>
         <button class="start-btn">Start game</button>
+        <button class="delete-game-btn" onclick="deleteGame(${g.id})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6H21" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 6V4C8 2.9 8.9 2 10 2H14C15.1 2 16 2.9 16 4V6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M19 6L18.1 19C18 20.1 17.1 21 16 21H8C6.9 21 6 20.1 5.9 19L5 6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 11V17" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M14 11V17" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </button>
       </div>
     `;
   });
@@ -330,4 +339,26 @@ function updateUpcomingGamesCount() {
   if (counter) {
     counter.innerText = games.length;
   }
+}
+
+function deleteGame(gameId) {
+  if (!confirm("Delete this game?")) {
+    return;
+  }
+
+  fetch("delete_game.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `game_id=${gameId}`,
+  })
+    .then((res) => res.text())
+    .then(() => {
+      games = games.filter((g) => g.id != gameId);
+
+      renderGames();
+      updateUpcomingGamesCount();
+    })
+    .catch((err) => console.error(err));
 }

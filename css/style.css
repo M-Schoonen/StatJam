@@ -665,6 +665,24 @@ body {
   flex-direction: column;
   gap: 16px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.delete-game-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  color: #999;
+  padding: 0;
+}
+
+.delete-game-btn:hover {
+  color: #F57C00;
 }
 
 .game-card-top {
