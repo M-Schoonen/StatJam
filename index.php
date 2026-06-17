@@ -268,9 +268,12 @@ $totalPlayers = $rowPlayers['total_players'];
           <div class="stat-card-top">
             <span class="stat-card-label">Win Rate</span>
             <svg class="stat-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M6 9H4.5a2.5 2.5 0 0 0 0 5H6" />
-              <path d="M18 9h1.5a2.5 2.5 0 0 1 0 5H18" />
-              <path d="M4 22V12a8 8 0 0 1 16 0v10" />
+              <path d="M8 4h8v6a4 4 0 0 1-8 0V4Z" />
+              <path d="M8 5H5.5a2.5 2.5 0 0 0 0 5H8" />
+              <path d="M16 5h2.5a2.5 2.5 0 0 1 0 5H16" />
+              <path d="M12 14v3" />
+              <path d="M8.5 21h7" />
+              <path d="M9 21c0-2 1-3 3-3s3 1 3 3" />
             </svg>
           </div>
           <div class="stat-card-value large"><?= $winRate ?>%</div>
