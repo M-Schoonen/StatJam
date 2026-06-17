@@ -821,6 +821,7 @@ body {
   text-decoration: none;
   flex-shrink: 0;
   white-space: nowrap;
+  cursor: pointer;
 }
 .box-score-link:hover { text-decoration: underline; }
 
@@ -875,4 +876,68 @@ body {
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: .5; transform: scale(.7); }
+}
+
+/* ── Box Score (in-page view) ─────────────────────── */
+.box-score-view {
+  background: #fff;
+  border-radius: 16px;
+  padding: 8px 0 16px;
+  overflow-x: auto;
+}
+
+.box-score-view table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 760px;
+}
+
+.box-score-view thead th {
+  padding: 16px 12px 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f57c00;
+  white-space: nowrap;
+  border-bottom: 1px solid #ebebeb;
+}
+.box-score-view thead th:first-child {
+  text-align: left;
+  padding-left: 28px;
+}
+
+.box-score-view tbody td {
+  padding: 14px 12px;
+  text-align: center;
+  color: #1a1a1a;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.box-score-view tbody td:first-child {
+  text-align: left;
+  padding-left: 28px;
+  font-weight: 500;
+}
+
+.box-score-view tbody tr:hover td {
+  background: #fafafa;
+}
+
+/* divider line after starters (5th player) */
+.box-score-view tr.divider-row td {
+  padding: 0;
+  height: 2px;
+  background: #f57c00;
+  border: none;
+}
+
+.box-score-view .pct {
+  color: #f57c00;
+}
+
+.box-score-view .player-num {
+  color: #1a1a1a;
+  font-weight: 500;
+  margin-right: 4px;
 }

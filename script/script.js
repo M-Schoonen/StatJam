@@ -403,3 +403,117 @@ function deleteGame(gameId) {
     })
     .catch((err) => console.error(err));
 }
+
+// ─── Game History / Box Score ────────────────────────────────────────────────
+
+function loadBoxScore(gameId, teamLabel, opponent) {
+  const historyView = document.getElementById("history-view");
+  const boxScoreView = document.getElementById("box-score-view");
+
+  setHistoryHeader(teamLabel, opponent);
+  historyView.style.opacity = 0;
+
+  setTimeout(() => {
+    historyView.style.display = "none";
+
+    fetch(`?ajax=box_score&game_id=${gameId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          boxScoreView.innerHTML = `<div class="empty-state">${data.error}</div>`;
+          boxScoreView.style.display = "block";
+          setTimeout(() => (boxScoreView.style.opacity = 1), 50);
+          return;
+        }
+
+        boxScoreView.innerHTML = renderBoxScoreHtml(data);
+        boxScoreView.style.display = "block";
+        setTimeout(() => (boxScoreView.style.opacity = 1), 50);
+      });
+  }, 200);
+}
+
+function renderBoxScoreHtml(data) {
+  const { players, totals } = data;
+
+  const fmtPct = (made, att) => {
+    made = parseInt(made) || 0;
+    att = parseInt(att) || 0;
+    if (!att) return "0.0";
+    return (Math.round((made / att) * 1000) / 10).toFixed(1);
+  };
+
+  let rows = "";
+  players.forEach((p, i) => {
+    rows += `
+      <tr>
+        <td>
+          <span class="player-num">#${p.jersey_number}</span>
+          ${p.first_name} ${p.last_name}
+        </td>
+        <td>${p.pts}</td>
+        <td>${p.reb}</td>
+        <td>${p.ast}</td>
+        <td>${p.stl}</td>
+        <td>${p.blk}</td>
+        <td>${p.tov}</td>
+        <td>${p.fgm}</td>
+        <td>${p.fga}</td>
+        <td class="pct">${fmtPct(p.fgm, p.fga)}</td>
+        <td>${p.three_pm}</td>
+        <td>${p.three_pa}</td>
+        <td class="pct">${fmtPct(p.three_pm, p.three_pa)}</td>
+        <td>${p.ftm}</td>
+        <td>${p.fta}</td>
+        <td class="pct">${fmtPct(p.ftm, p.fta)}</td>
+        <td>${p.fouls}</td>
+      </tr>
+    `;
+
+    if (i === 4 && players.length > 5) {
+      rows += `<tr class="divider-row"><td colspan="17"></td></tr>`;
+    }
+  });
+
+  return `
+    <table>
+      <thead>
+        <tr>
+          <th># name</th><th>pts</th><th>reb</th><th>ast</th><th>stl</th><th>blk</th>
+          <th>tov</th><th>fgm</th><th>fga</th><th>fg%</th><th>3pm</th><th>3pa</th>
+          <th>3p%</th><th>ftm</th><th>fta</th><th>ft%</th><th>fls</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+function backToHistory() {
+  const historyView = document.getElementById("history-view");
+  const boxScoreView = document.getElementById("box-score-view");
+
+  resetHistoryHeader();
+  boxScoreView.style.opacity = 0;
+
+  setTimeout(() => {
+    boxScoreView.style.display = "none";
+    historyView.style.display = "block";
+    setTimeout(() => (historyView.style.opacity = 1), 50);
+  }, 200);
+}
+
+function setHistoryHeader(teamLabel, opponent) {
+  document.getElementById("history-title").innerHTML = `
+    <span class="back-title" onclick="backToHistory()">
+      <svg class="back-icon" width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 8L8.10811 0L10 1.86667L3.78378 8L10 14.1333L8.10811 16L0 8Z" fill="#F57C00"/>
+      </svg>
+      <span class="back-text">${teamLabel} VS ${opponent}</span>
+    </span>
+  `;
+}
+
+function resetHistoryHeader() {
+  document.getElementById("history-title").innerText = "Your game history";
+}
