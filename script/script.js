@@ -205,15 +205,26 @@ function renderGames() {
   const container = document.getElementById("games-container");
   container.innerHTML = "";
 
+  if (games.length === 0) {
+    container.innerHTML = `<div class="empty-state">No upcoming games yet.</div>`;
+    return;
+  }
+
   games.forEach((g) => {
+    const isInProgress = g.status === "in_progress";
+    const btnLabel = isInProgress ? "Continue game" : "Start game";
+    const badgeHtml = isInProgress
+      ? `<span class="badge-in-progress">In Progress</span>`
+      : "";
+
     container.innerHTML += `
-      <div class="game-card">
+      <div class="game-card${isInProgress ? " in-progress" : ""}">
         <img class="game-logo" src="${g.logo}" />
         <div class="game-info">
           <div class="game-title">${g.team_name} ${g.gender}${g.age_category} VS ${g.opponent}</div>
-          <div class="game-date">${formatGameDate(g.game_date)}</div>
+          <div class="game-date">${formatGameDate(g.game_date)} ${badgeHtml}</div>
         </div>
-        <button class="start-btn">Start game</button>
+        <button class="start-btn" onclick="window.location.href='game_tracker.php?game_id=${g.id}'">${btnLabel}</button>
         <button class="delete-game-btn" onclick="deleteGame(${g.id})">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M3 6H21" stroke="currentColor" stroke-width="1.5"/>

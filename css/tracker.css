@@ -1,0 +1,628 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --orange: #f57c00;
+  --orange-light: #fff3e0;
+  --orange-dark: #e06c00;
+  --bg: #f0f0f0;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #888;
+  --border: #ebebeb;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scoreboard ───────────────────────────────────── */
+.scoreboard {
+  background: var(--card);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.sb-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--orange);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.sb-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.sb-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.sb-team-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.sb-team-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.sb-scores {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.sb-score {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--orange);
+  line-height: 1;
+  min-width: 60px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.sb-score.opp {
+  color: var(--text);
+}
+.sb-dash {
+  font-size: 32px;
+  font-weight: 300;
+  color: #ccc;
+}
+.sb-opp {
+  flex: 1;
+  text-align: right;
+}
+.sb-opp-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+}
+.sb-opp-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.sb-opp-btns {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.opp-pt-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.opp-pt-btn:hover {
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
+}
+
+/* ── Layout ──────────────────────────────────────── */
+.tracker-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Sidebar ─────────────────────────────────────── */
+.sidebar {
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: calc(100vh - 93px);
+  position: sticky;
+  top: 93px;
+}
+.sidebar-header {
+  padding: 14px 16px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-header svg {
+  color: var(--orange);
+}
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+.player-item:hover {
+  background: #fafafa;
+}
+.player-item.active {
+  background: var(--orange-light);
+  border-left: 3px solid var(--orange);
+}
+.player-item.active .pi-num {
+  color: var(--orange);
+}
+.pi-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: #bbb;
+  min-width: 28px;
+}
+.pi-info {
+  flex: 1;
+  min-width: 0;
+}
+.pi-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pi-pts {
+  font-size: 11px;
+  color: var(--muted);
+}
+.all-stats-btn {
+  margin: 12px 14px;
+  padding: 11px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.all-stats-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* ── Stat panel ──────────────────────────────────── */
+.stat-panel {
+  padding: 24px;
+  overflow-y: auto;
+  padding-bottom: 90px;
+}
+.no-player-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 40px;
+}
+.no-player-msg svg {
+  opacity: 0.25;
+}
+.no-player-msg p {
+  font-size: 14px;
+}
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.ph-avatar {
+  width: 52px;
+  height: 52px;
+  background: var(--orange-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ph-avatar svg {
+  color: var(--orange);
+}
+.ph-num {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--orange);
+}
+.ph-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.ph-pos {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-section {
+  margin-bottom: 20px;
+}
+.stat-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.stat-tile {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.st-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.st-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.st-pct {
+  font-size: 12px;
+  color: var(--orange);
+  font-weight: 600;
+}
+.st-btns {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+.st-btn {
+  flex: 1;
+  padding: 6px 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  color: var(--text);
+  transition:
+    background 0.12s,
+    color 0.12s,
+    border-color 0.12s;
+}
+.st-btn:hover {
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
+}
+.st-btn.minus {
+  flex: 0 0 38px;
+  font-size: 18px;
+  color: #ccc;
+}
+.st-btn.minus:hover {
+  background: #fee;
+  color: #e53935;
+  border-color: #e53935;
+}
+
+/* ── All Stats Modal ─────────────────────────────── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+.modal {
+  background: var(--card);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-head {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 22px;
+  line-height: 1;
+  font-family: "Poppins", sans-serif;
+}
+.modal-close:hover {
+  color: var(--text);
+}
+.modal-body {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0 0 16px;
+}
+
+/* Responsive stat table — no horizontal scroll */
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.stats-table th {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+}
+.stats-table th:first-child {
+  text-align: left;
+  width: 160px;
+}
+.stats-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+.stats-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+.stats-table tr:hover td {
+  background: #fafafa;
+}
+.stats-table .pct {
+  color: var(--orange);
+  font-weight: 600;
+}
+.stats-table .player-num {
+  color: var(--orange);
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+/* ── Save bar ─────────────────────────────────────── */
+.save-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  z-index: 40;
+  align-items: center;
+}
+.save-status {
+  font-size: 13px;
+  color: var(--muted);
+  align-self: center;
+  margin-right: auto;
+}
+.pause-btn {
+  background: none;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pause-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.finish-btn {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.finish-btn:hover {
+  background: var(--orange-dark);
+}
+
+/* ── Confirm finish modal ─────────────────────────── */
+.confirm-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 300;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.confirm-backdrop.open {
+  display: flex;
+}
+.confirm-box {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 36px 32px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.confirm-icon {
+  font-size: 40px;
+}
+.confirm-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+.confirm-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.confirm-cancel {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.confirm-cancel:hover {
+  border-color: var(--orange);
+}
+.confirm-ok {
+  flex: 1;
+  padding: 12px;
+  background: var(--orange);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  transition: background 0.15s;
+}
+.confirm-ok:hover {
+  background: var(--orange-dark);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}

@@ -37,7 +37,7 @@ $upcomingGamesResult = $conn->query("
     SELECT COUNT(*) AS total
     FROM games
     WHERE user_id = '$user_id'
-    AND game_date >= CURDATE()
+    AND (status IS NULL OR status != 'finished')
 ");
 
 $upcomingGames = $upcomingGamesResult->fetch_assoc()['total'];
@@ -48,7 +48,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'games') {
   $sql = "SELECT g.*, t.team_name, t.gender, t.age_category, t.logo 
           FROM games g
           JOIN teams t ON g.team_id = t.id
-          WHERE g.user_id = '$user_id'
+          WHERE g.user_id = '$user_id' AND (g.status != 'finished' OR g.status IS NULL)
           ORDER BY g.game_date ASC";
 
   $result = $conn->query($sql);
@@ -477,13 +477,62 @@ $totalPlayers = $rowPlayers['total_players'];
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
-         GAME HISTORY TAB — add your content here
-    ════════════════════════════════════════════════════════ -->
+     GAME HISTORY TAB
+     Replace the existing page-history placeholder div with this
+════════════════════════════════════════════════════════ -->
     <div class="page" id="page-history">
-      <div class="placeholder">
-        <h2>Game History</h2>
-        <p>Your game history content goes here.</p>
+
+      <div class="tab-tagline">
+        <p class="tagline-txt">Your game history</p>
       </div>
+
+      <?php
+      $historyResult = $conn->query("
+    SELECT g.*, t.team_name, t.gender, t.age_category, t.logo
+    FROM games g
+    JOIN teams t ON g.team_id = t.id
+    WHERE g.user_id = '$user_id'
+      AND g.status = 'finished'
+    ORDER BY g.finished_at DESC
+  ");
+      ?>
+
+      <?php if ($historyResult->num_rows === 0): ?>
+        <div class="empty-state" style="margin-top: 60px;">No finished games yet. Complete a game to see it here.</div>
+      <?php else: ?>
+        <div class="history-grid">
+          <?php while ($hg = $historyResult->fetch_assoc()):
+            $homeScore = 0;
+            $ptsResult = $conn->query("SELECT SUM(pts) AS total FROM game_stats WHERE game_id = '{$hg['id']}'");
+            $ptsRow    = $ptsResult->fetch_assoc();
+            $homeScore = (int)($ptsRow['total'] ?? 0);
+            $oppScore  = (int)($hg['opp_score'] ?? 0);
+            $win       = $homeScore > $oppScore;
+            $resultLabel = $win ? 'W' : ($homeScore === $oppScore ? 'D' : 'L');
+            $resultClass = $win ? 'result-w' : ($homeScore === $oppScore ? 'result-d' : 'result-l');
+
+            $dateObj = new DateTime($hg['finished_at'] ?? $hg['game_date']);
+            $dateStr = $dateObj->format('l, F jS Y');
+          ?>
+            <div class="history-card">
+              <div class="hc-top">
+                <img class="hc-logo" src="<?= htmlspecialchars($hg['logo']) ?>" alt="logo"
+                  onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%23f57c00%22/></svg>'">
+                <div class="hc-info">
+                  <div class="hc-title"><?= htmlspecialchars($hg['team_name']) ?> <?= $hg['gender'] . $hg['age_category'] ?> VS <?= htmlspecialchars($hg['opponent']) ?></div>
+                  <div class="hc-date"><?= $dateStr ?></div>
+                </div>
+                <a href="box_score.php?game_id=<?= $hg['id'] ?>" class="box-score-link">Box Score</a>
+              </div>
+              <div class="hc-score <?= $resultClass ?>">
+                <span class="hc-result"><?= $resultLabel ?></span>
+                <?= $homeScore ?>–<?= $oppScore ?>
+              </div>
+            </div>
+          <?php endwhile; ?>
+        </div>
+      <?php endif; ?>
+
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
