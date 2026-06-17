@@ -572,6 +572,23 @@ body {
   gap: 40px;
 
   min-height: 120px;
+  position: relative;
+}
+
+.delete-player-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  padding: 0;
+  line-height: 0;
+}
+
+.delete-player-btn:hover {
+  color: #f57c00;
 }
 
 .player-left {
