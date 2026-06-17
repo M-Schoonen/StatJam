@@ -42,6 +42,63 @@ $upcomingGamesResult = $conn->query("
 
 $upcomingGames = $upcomingGamesResult->fetch_assoc()['total'];
 
+$gamesPlayedResult = $conn->query("
+    SELECT COUNT(*) AS total
+    FROM games
+    WHERE user_id = '$user_id'
+    AND status = 'finished'
+");
+$gamesPlayed = $gamesPlayedResult->fetch_assoc()['total'];
+
+$topPerformersResult = $conn->query("
+    SELECT
+        p.id,
+        p.first_name,
+        p.last_name,
+        p.jersey_number,
+        p.position,
+        COUNT(gs.game_id)                        AS games_played,
+        ROUND(AVG(gs.pts),  1)                   AS ppg,
+        ROUND(AVG(gs.reb),  1)                   AS rpg,
+        ROUND(AVG(gs.ast),  1)                   AS apg
+    FROM players p
+    JOIN teams t    ON p.team_id  = t.id
+    JOIN game_stats gs ON gs.player_id = p.id
+    JOIN games g    ON gs.game_id = g.id
+    WHERE t.user_id = '$user_id'
+    AND g.status    = 'finished'
+    GROUP BY p.id
+    HAVING games_played > 0
+    ORDER BY ppg DESC
+    LIMIT 1
+");
+
+$recentGamesResult = $conn->query("
+    SELECT g.*, t.team_name, t.gender, t.age_category,
+           (SELECT SUM(pts) FROM game_stats WHERE game_id = g.id) AS home_score
+    FROM games g
+    JOIN teams t ON g.team_id = t.id
+    WHERE g.user_id = '$user_id'
+    AND g.status = 'finished'
+    ORDER BY g.finished_at DESC
+    LIMIT 1
+");
+
+$winRateResult = $conn->query("
+    SELECT
+        COUNT(*) AS total,
+        SUM(CASE WHEN (SELECT SUM(pts) FROM game_stats WHERE game_id = g.id) > g.opp_score THEN 1 ELSE 0 END) AS wins,
+        SUM(CASE WHEN (SELECT SUM(pts) FROM game_stats WHERE game_id = g.id) < g.opp_score THEN 1 ELSE 0 END) AS losses
+    FROM games g
+    WHERE g.user_id = '$user_id'
+    AND g.status = 'finished'
+");
+$winRateRow = $winRateResult->fetch_assoc();
+$totalGames = (int)$winRateRow['total'];
+$wins       = (int)$winRateRow['wins'];
+$losses     = (int)$winRateRow['losses'];
+$winRate    = $totalGames > 0 ? round(($wins / $totalGames) * 100) : 0;
+
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'games') {
   header('Content-Type: application/json');
 
@@ -151,7 +208,7 @@ $totalPlayers = $rowPlayers['total_players'];
               <path d="M16 2v4M8 2v4M3 10h18" />
             </svg>
           </div>
-          <div class="stat-card-value">24</div>
+          <div class="stat-card-value"><?= $gamesPlayed ?></div>
         </div>
 
         <div class="stat-card">
@@ -163,8 +220,8 @@ $totalPlayers = $rowPlayers['total_players'];
               <path d="M4 22V12a8 8 0 0 1 16 0v10" />
             </svg>
           </div>
-          <div class="stat-card-value large">60%</div>
-          <div class="stat-card-sub">16W–8L</div>
+          <div class="stat-card-value large"><?= $winRate ?>%</div>
+          <div class="stat-card-sub"><?= $wins ?>W–<?= $losses ?>L</div>
         </div>
 
         <div class="stat-card">
@@ -189,21 +246,25 @@ $totalPlayers = $rowPlayers['total_players'];
           <div class="panel-title">Top Performers</div>
           <div class="panel-subtitle">Leading scorers based on completed games</div>
 
-          <!-- ADD MORE PERFORMER ROWS HERE -->
-          <div class="performer-row">
-            <div class="performer-left">
-              <span class="performer-num">#15</span>
-              <div>
-                <div class="performer-name">Melvin Schoonen</div>
-                <div class="performer-pos">SG</div>
+          <?php if ($topPerformersResult->num_rows === 0): ?>
+            <div class="empty-state" style="margin-top: 20px; font-size: 13px;">No stats recorded yet.</div>
+          <?php else: ?>
+            <?php while ($tp = $topPerformersResult->fetch_assoc()): ?>
+              <div class="performer-row">
+                <div class="performer-left">
+                  <span class="performer-num">#<?= $tp['jersey_number'] ?></span>
+                  <div>
+                    <div class="performer-name"><?= htmlspecialchars($tp['first_name'] . ' ' . $tp['last_name']) ?></div>
+                    <div class="performer-pos"><?= $tp['position'] ?></div>
+                  </div>
+                </div>
+                <div class="performer-right">
+                  <div class="performer-ppg"><?= $tp['ppg'] ?> PPG</div>
+                  <div class="performer-extras"><?= $tp['rpg'] ?> RPG, <?= $tp['apg'] ?> APG</div>
+                </div>
               </div>
-            </div>
-            <div class="performer-right">
-              <div class="performer-ppg">17.4 PPG</div>
-              <div class="performer-extras">4.7 RPG, 5.1 APG</div>
-            </div>
-          </div>
-          <!-- /performer-row -->
+            <?php endwhile; ?>
+          <?php endif; ?>
 
         </div>
 
@@ -212,18 +273,29 @@ $totalPlayers = $rowPlayers['total_players'];
           <div class="panel-title">Recent Games</div>
           <div class="panel-subtitle">Latest game results and upcoming matches</div>
 
-          <!-- ADD MORE GAME ROWS HERE -->
-          <div class="game-row">
-            <div>
-              <div class="game-opponent">VS Barons</div>
-              <div class="game-date">31-7-2025 • Home</div>
-            </div>
-            <div class="game-badge">
-              <span class="badge-final">Final</span>
-              <span class="game-score">120-36</span>
-            </div>
-          </div>
-          <!-- /game-row -->
+          <?php if ($recentGamesResult->num_rows === 0): ?>
+            <div class="empty-state" style="margin-top: 20px; font-size: 13px;">No finished games yet.</div>
+          <?php else: ?>
+            <?php while ($rg = $recentGamesResult->fetch_assoc()):
+              $home = (int)($rg['home_score'] ?? 0);
+              $opp  = (int)($rg['opp_score']  ?? 0);
+              $win  = $home > $opp;
+              $date = (new DateTime($rg['finished_at']))->format('d-m-Y');
+            ?>
+              <div class="game-row">
+                <div>
+                  <div class="game-opponent">VS <?= htmlspecialchars($rg['opponent']) ?></div>
+                  <div class="game-date"><?= $date ?> • <?= htmlspecialchars($rg['team_name']) ?> <?= $rg['gender'] . $rg['age_category'] ?></div>
+                </div>
+                <div class="game-badge">
+                  <span class="badge-final" style="background: <?= $win ? '#2e7d32' : '#c62828' ?>">
+                    <?= $win ? 'W' : 'L' ?>
+                  </span>
+                  <span class="game-score"><?= $home ?>-<?= $opp ?></span>
+                </div>
+              </div>
+            <?php endwhile; ?>
+          <?php endif; ?>
 
         </div>
 
