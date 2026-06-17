@@ -510,6 +510,10 @@ body {
   gap: 20px;
 }
 
+.teams-container .empty-state {
+  grid-column: 1 / -1;
+}
+
 .team-card {
   background: #fff;
   border-radius: 25px;
@@ -559,6 +563,10 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+}
+
+.players-container .empty-state {
+  grid-column: 1 / -1;
 }
 
 .player-card {
