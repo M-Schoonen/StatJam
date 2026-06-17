@@ -342,6 +342,8 @@ body {
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: 50px;
 }
 
 .tab-tagline .tagline-txt {
@@ -940,4 +942,134 @@ body {
   color: #1a1a1a;
   font-weight: 500;
   margin-right: 4px;
+}
+
+.stat-leaders-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat-leader-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.stat-leader-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #f57c00;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 10px;
+}
+
+.stat-leader-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.stat-leader-row.rank-1 {
+  font-weight: 700;
+}
+
+.stat-leader-row .sl-name {
+  flex: 1;
+}
+
+.stat-leader-row .sl-value {
+  font-weight: 700;
+  margin-left: 12px;
+}
+
+.stat-leader-row:not(.rank-1) .sl-value {
+  font-weight: 400;
+  color: #555;
+}
+
+@media (max-width: 1000px) {
+  .stat-leaders-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .stat-leaders-grid { grid-template-columns: 1fr; }
+}
+
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f57c00;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: normal;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 0;
+  height: auto;
+}
+
+.custom-select-trigger svg {
+  transition: transform 0.2s ease;
+  display: block;
+  flex-shrink: 0;
+}
+
+.custom-select.open .custom-select-trigger svg {
+  transform: rotate(180deg);
+}
+
+.custom-select-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 200px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 50;
+  padding: 6px;
+}
+
+.custom-select.open .custom-select-menu {
+  display: block;
+}
+
+.custom-select-option {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #1a1a1a;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.custom-select-option:hover {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.custom-select-option.selected {
+  color: #f57c00;
+  font-weight: 600;
 }

@@ -517,3 +517,92 @@ function setHistoryHeader(teamLabel, opponent) {
 function resetHistoryHeader() {
   document.getElementById("history-title").innerText = "Your game history";
 }
+
+// ─── Stat Leaders ─────────────────────────────────────────────────────────────
+
+function loadStatLeaders(teamId) {
+  const grid = document.getElementById("stat-leaders-grid");
+  grid.style.opacity = 0;
+
+  setTimeout(() => {
+    const url = teamId
+      ? `?ajax=stat_leaders&team_id=${teamId}`
+      : `?ajax=stat_leaders`;
+
+    fetch(url)
+      .then((res) => res.text())
+      .then((text) => {
+        console.log("stat_leaders raw response:", text);
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          console.error("stat_leaders JSON parse failed:", err);
+          grid.innerHTML = `<div class="empty-state">Error loading stat leaders. Check console.</div>`;
+          grid.style.opacity = 1;
+          return;
+        }
+        grid.innerHTML = renderStatLeadersHtml(data);
+        setTimeout(() => (grid.style.opacity = 1), 50);
+      })
+      .catch((err) => {
+        console.error("stat_leaders fetch failed:", err);
+        grid.innerHTML = `<div class="empty-state">Error loading stat leaders. Check console.</div>`;
+        grid.style.opacity = 1;
+      });
+  }, 150);
+}
+
+function renderStatLeadersHtml(data) {
+  let html = "";
+
+  Object.values(data).forEach((stat) => {
+    html += `<div class="stat-leader-card">
+      <div class="stat-leader-title">${stat.label}</div>`;
+
+    if (stat.rows.length === 0) {
+      html += `<div class="empty-state" style="font-size:13px; padding: 8px 0;">No stats recorded yet.</div>`;
+    } else {
+      stat.rows.forEach((row, i) => {
+        html += `
+          <div class="stat-leader-row ${i === 0 ? "rank-1" : ""}">
+            <span class="sl-name">${i + 1}. ${row.name}</span>
+            <span class="sl-value">${row.value}</span>
+          </div>
+        `;
+      });
+    }
+
+    html += `</div>`;
+  });
+
+  return html;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadStatLeaders("");
+});
+
+// ─── Custom team dropdown ───────────────────────────────────────────────────
+
+function toggleTeamDropdown() {
+  document.getElementById("team-filter-select").classList.toggle("open");
+}
+
+function selectTeam(teamId, label) {
+  document.getElementById("team-filter-label").textContent = label;
+  document.getElementById("team-filter-select").classList.remove("open");
+
+  document.querySelectorAll(".custom-select-option").forEach((opt) => {
+    opt.classList.toggle("selected", opt.dataset.value === teamId);
+  });
+
+  loadStatLeaders(teamId);
+}
+
+document.addEventListener("click", (e) => {
+  const dropdown = document.getElementById("team-filter-select");
+  if (dropdown && !dropdown.contains(e.target)) {
+    dropdown.classList.remove("open");
+  }
+});

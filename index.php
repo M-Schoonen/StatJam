@@ -80,6 +80,67 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'box_score') {
   exit;
 }
 
+if (isset($_GET['ajax']) && $_GET['ajax'] === 'stat_leaders') {
+  header('Content-Type: application/json');
+
+  $team_filter = isset($_GET['team_id']) && $_GET['team_id'] !== '' ? $_GET['team_id'] : null;
+
+  $teamClause = $team_filter ? "AND t.id = '$team_filter'" : "";
+
+  $statDefs = [
+    'ppg'      => ['label' => 'Points per game',        'agg' => 'AVG(gs.pts)',       'round' => 1],
+    'rpg'      => ['label' => 'Rebounds per game',       'agg' => 'AVG(gs.reb)',       'round' => 1],
+    'apg'      => ['label' => 'Assists per game',        'agg' => 'AVG(gs.ast)',       'round' => 1],
+    'spg'      => ['label' => 'Steals per game',         'agg' => 'AVG(gs.stl)',       'round' => 1],
+    'bpg'      => ['label' => 'Blocks per game',         'agg' => 'AVG(gs.blk)',       'round' => 1],
+    'topg'     => ['label' => 'Turnovers per game',      'agg' => 'AVG(gs.tov)',       'round' => 1],
+    'fgm'      => ['label' => 'Field goals made',        'agg' => 'SUM(gs.fgm)',       'round' => 0],
+    'fgpct'    => ['label' => 'Field goal percentage',   'agg' => 'SUM(gs.fgm)/SUM(gs.fga)*100', 'round' => 1, 'guard' => 'SUM(gs.fga) > 0'],
+    'tpm'      => ['label' => 'Three pointers made',     'agg' => 'SUM(gs.three_pm)',  'round' => 0],
+    'tppct'    => ['label' => 'Three point percentage',  'agg' => 'SUM(gs.three_pm)/SUM(gs.three_pa)*100', 'round' => 1, 'guard' => 'SUM(gs.three_pa) > 0'],
+    'ftm'      => ['label' => 'Free throws made',        'agg' => 'SUM(gs.ftm)',       'round' => 0],
+    'ftpct'    => ['label' => 'Free throw percentage',   'agg' => 'SUM(gs.ftm)/SUM(gs.fta)*100', 'round' => 1, 'guard' => 'SUM(gs.fta) > 0'],
+    'fouls'    => ['label' => 'Personal fouls',          'agg' => 'SUM(gs.fouls)',     'round' => 0],
+  ];
+
+  $leaders = [];
+
+  foreach ($statDefs as $key => $def) {
+    $havingClause = isset($def['guard']) ? "HAVING {$def['guard']}" : "";
+
+    $sql = "
+      SELECT
+        p.id, p.first_name, p.last_name,
+        ROUND({$def['agg']}, {$def['round']}) AS value
+      FROM players p
+      JOIN teams t ON p.team_id = t.id
+      JOIN game_stats gs ON gs.player_id = p.id
+      JOIN games g ON gs.game_id = g.id
+      WHERE t.user_id = '$user_id'
+        AND g.status = 'finished'
+        $teamClause
+      GROUP BY p.id
+      $havingClause
+      ORDER BY value DESC
+      LIMIT 5
+    ";
+
+    $result = $conn->query($sql);
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+      $rows[] = [
+        'name'  => $row['first_name'] . ' ' . $row['last_name'],
+        'value' => $row['value'],
+      ];
+    }
+
+    $leaders[$key] = ['label' => $def['label'], 'rows' => $rows];
+  }
+
+  echo json_encode($leaders);
+  exit;
+}
+
 $sql = "SELECT * FROM teams WHERE user_id = '$user_id' ORDER BY age_category";
 $result = $conn->query($sql);
 
@@ -670,13 +731,41 @@ $totalPlayers = $rowPlayers['total_players'];
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
-         STAT LEADERS TAB — add your content here
-    ════════════════════════════════════════════════════════ -->
+     STAT LEADERS TAB
+════════════════════════════════════════════════════════ -->
     <div class="page" id="page-stat-leaders">
-      <div class="placeholder">
-        <h2>Stat Leaders</h2>
-        <p>Your stat leaders content goes here.</p>
+
+      <div class="tab-tagline">
+        <p class="tagline-txt">Your stat leaders</p>
+
+        <div class="custom-select" id="team-filter-select">
+<span type="button" class="custom-select-trigger" onclick="toggleTeamDropdown()" role="button" tabindex="0">
+  <span id="team-filter-label">Select Team</span>
+  <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+    <path d="M1 1L5 5L9 1" stroke="#f57c00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</span>
+
+          <div class="custom-select-menu" id="team-filter-menu">
+            <div class="custom-select-option" data-value="" onclick="selectTeam('', 'Select Team')">All teams</div>
+            <?php
+            $sqlAllTeams = "SELECT * FROM teams WHERE user_id = '$user_id' ORDER BY team_name";
+            $allTeamsResult = $conn->query($sqlAllTeams);
+            while ($t = $allTeamsResult->fetch_assoc()):
+              $label = htmlspecialchars($t['team_name'] . ' ' . $t['gender'] . $t['age_category']);
+            ?>
+              <div class="custom-select-option" data-value="<?= $t['id'] ?>" onclick="selectTeam('<?= $t['id'] ?>', '<?= $label ?>')">
+                <?= $label ?>
+              </div>
+            <?php endwhile; ?>
+          </div>
+        </div>
       </div>
+
+      <div id="stat-leaders-grid" class="stat-leaders-grid">
+        <div class="empty-state" style="margin-top: 60px;">Loading stat leaders...</div>
+      </div>
+
     </div>
 
   </div><!-- /content -->
