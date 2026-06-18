@@ -128,15 +128,15 @@ function loadPlayers(teamId, teamName, gender, ageCategory) {
                 <div class="player-stats">
                   <div class="stat">
                     <span class="stat-label">PPG</span>
-                    <span class="stat-value">0.0</span>
+                    <span class="stat-value">${Number(p.ppg).toFixed(1)}</span>
                   </div>
                   <div class="stat">
                     <span class="stat-label">RPG</span>
-                    <span class="stat-value">0.0</span>
+                    <span class="stat-value">${Number(p.rpg).toFixed(1)}</span>
                   </div>
                   <div class="stat">
                     <span class="stat-label">APG</span>
-                    <span class="stat-value">0.0</span>
+                    <span class="stat-value">${Number(p.apg).toFixed(1)}</span>
                   </div>
                 </div>
               </div>

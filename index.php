@@ -14,12 +14,30 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'players') {
 
   $team_id = $_GET['team_id'];
 
-  $sql = "SELECT * FROM players WHERE team_id = '$team_id' ORDER BY jersey_number";
-  $result = $conn->query($sql);
+  $stmt = $conn->prepare("
+    SELECT
+      p.*,
+      ROUND(AVG(gs.pts), 1) AS ppg,
+      ROUND(AVG(gs.reb), 1) AS rpg,
+      ROUND(AVG(gs.ast), 1) AS apg
+    FROM players p
+    LEFT JOIN game_stats gs ON gs.player_id = p.id
+    LEFT JOIN games g ON gs.game_id = g.id AND g.status = 'finished'
+    WHERE p.team_id = ?
+    GROUP BY p.id
+    ORDER BY p.jersey_number
+  ");
+  $stmt->bind_param('i', $team_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
   $players = [];
 
   while ($row = $result->fetch_assoc()) {
+    // No finished games yet -> AVG() returns NULL, normalize to 0.0
+    $row['ppg'] = $row['ppg'] !== null ? (float)$row['ppg'] : 0.0;
+    $row['rpg'] = $row['rpg'] !== null ? (float)$row['rpg'] : 0.0;
+    $row['apg'] = $row['apg'] !== null ? (float)$row['apg'] : 0.0;
     $players[] = $row;
   }
 
@@ -257,6 +275,7 @@ $totalPlayers = $rowPlayers['total_players'];
   <title>StatJam</title>
   <link rel="icon" href="./img/StatJam-Ball-Logo.webp" type="image/webp" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/tracker.css" />
 </head>
 
 <body>
@@ -739,12 +758,12 @@ $totalPlayers = $rowPlayers['total_players'];
         <p class="tagline-txt">Your stat leaders</p>
 
         <div class="custom-select" id="team-filter-select">
-<span type="button" class="custom-select-trigger" onclick="toggleTeamDropdown()" role="button" tabindex="0">
-  <span id="team-filter-label">Select Team</span>
-  <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-    <path d="M1 1L5 5L9 1" stroke="#f57c00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-</span>
+          <span type="button" class="custom-select-trigger" onclick="toggleTeamDropdown()" role="button" tabindex="0">
+            <span id="team-filter-label">Select Team</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+              <path d="M1 1L5 5L9 1" stroke="#f57c00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
 
           <div class="custom-select-menu" id="team-filter-menu">
             <div class="custom-select-option" data-value="" onclick="selectTeam('', 'Select Team')">All teams</div>
